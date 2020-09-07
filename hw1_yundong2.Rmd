@@ -46,29 +46,66 @@ You have an unlimited number of submissions, but only the latest proper submissi
 
 1. (Markdown) Using Markdown syntax, make a numbered list with your first name in normal text as the first item and your last name in bold text as the second item. 
 
+    1. Justin
+    2. **Kim**
+
 
 2. (Syllabus, Markdown) All assignments are assumed to be in which time zone? 
 
+    US Central
+
 
 3. (GitHub, Markdown) Are merge conflicts able to be resolved? Write Yes or No in bold text.
-
+  
+    **Yes**
 
 4. (RMarkdown, R Simple manipulations, R Numbers and vectors) Using RMarkdown, determine if these numbers are prime or not:
 
   a. 7919
   
+    7919 is a prime number.
+```{r}
+n=7919
+7919/2
+a <- seq(from=3,to=n,by=2)
+7919/a
+```
+
   b. 111
   
+    111 is not a prime number.
+```{r}
+c <- seq(from=3,111,by=2)
+111/2
+111/c
+```
+
+  
   c. 777
+  
+    777 is not a prime number.
+```{r}
+777/7
+```
+  
 
 
 5. (RMarkdown, R Simple manipulations, R Numbers and vectors) Using RMarkdown, calculate the following:
 
   a. 6 ÷2(1 + 2)
+```{r}
+6/2*(1 + 2)
+```
 
   b. 9 - 3 ÷ 1/3 + 1
+```{r}
+9 - 3/(1/3) + 1
+```
 
   c. -10 ÷ (20 ÷ 2² × 5 ÷ 5) × 8 - 2
+```{r}
+-10/(20/2^2 * 5 / 5) * 8 - 2
+```
 
 
 6. (RMarkdown, R Simple manipulations, R Numbers and vectors) Using RMarkdown, reproduce the result.
@@ -78,27 +115,74 @@ You have an unlimited number of submissions, but only the latest proper submissi
 "happy 1"  "happy 2"  "happy 3"  "happy 4"  "happy 5" 
 "happy 6"  "happy 7"  "happy 8"  "happy 9"  "happy 10"
 ```
+```{r}
+rep(paste("happy",1:10), 2)
+```
 
 
 7. (RMarkdown, R Simple manipulations, R Numbers and vectors) Create a vector of length 15 that contains the number 9 in the ninth place and zeroes otherwise.
+```{r}
+vector = c(rep(0,8),9, rep(0,6))
+vector2 = c(0, 0, 0, 0, 0, 0, 0, 0, 9, 0 , 0, 0, 0, 0, 0)
+```
 
 
 8. (RMarkdown, R Numbers and vectors) Using RMarkdown and the vector `X` with the code `set.seed(385); X <- rnorm(10)` compute the following statistics for `X` by only using computations (no functions) and the formulas as a guide:  
 
   a. mean $\bar{x}=\sum_{i=1}^{N} x_i/N$   
+```{r}
+set.seed(385)
+X <- rnorm(10)
+
+mean = (X[1] + X[2] + X[3] + X[4] + X[5] + X[6] + X[7] + X[8] + X[9] + X[10])/10
+mean
+```
+  
     
   b. squared deviations from the mean $(x_i-\bar{x})^2$ 
+```{r}
+  SDM = (X- mean)^2
+SDM
+
+```
+  
    
   c. sum of squared deviations from the mean $\sum_{i=1}^{N}(x_i-\bar{x})^2$ 
+```{r}
+sum = SDM[1] +  SDM[2] + SDM[3] + SDM[4] + SDM[5] + SDM[6] + SDM[7] + SDM[8] + SDM[9] + SDM[10]
+sum
+```
+  
 
 
 9. (RMarkdown, R Numbers and vectors) Using RMarkdown and the vector `X` with the code `set.seed(385); X <- rnorm(10)` compute the following statistics for `X` using any of the functions `length()`, `mean()`, and `sum()` and the formulas as a guide:  
 
   a. mean $\bar{x}=\sum_{i=1}^{N} x_i/N$   
+```{r}
+useful = mean(X)
+```
     
   b. squared deviations from the mean $(x_i-\bar{x})^2$ 
+```{r}
+
+squared_deviation = (X - useful)^2
+squared_deviation
+```
   
-  c. sum of squared deviations from the mean $\sum_{i=1}^{N}(x_i-\bar{x})^2$   
+  c. sum of squared deviations from the mean $\sum_{i=1}^{N}(x_i-\bar{x})^2$  
+```{r}
+sum9 = sum(squared_deviation)
+sum9
+```
+  
 
 
 10. (GitHub) When you have completed all questions above, make a **commit** with the message "All done". After the commit is successful, **push** the completed file to your personal repo.
+
+
+
+
+
+
+
+
