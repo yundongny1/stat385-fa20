@@ -95,18 +95,21 @@ head(election,10)
 
 Now, print the first 10 observations of the combined data. *Hint: Keep in mind that this inner join will only make sense for the most recent date of COVID-19 data.*
 ```{r}
-range(covid$date)
-
 ##covid2 the most recent covid data
 covid2 <- covid[covid$date=="2020-10-01",]
 covid2
+states = unique(election$state)
+
+
 election2 = NULL
 
-for(i in 1:length(states)){
-  maxvotes <- max(election[election$state==states[i],"candidatevotes"])
-  election2 <- rbind(election2,election[election$candidatevotes==maxvotes, ])
-}
 
+for(i in 1:length(states)){
+  maxvotes = max(election[election$state==states[i],"candidatevotes"])
+  election2 = rbind(election2,election[election$candidatevotes==maxvotes, ])
+}
+combined = merge(covid2, election2, by = "state")  
+head(combined, 10)
 combined <- merge(covid2, election2, by="state")
 head(combined, 10)
 
