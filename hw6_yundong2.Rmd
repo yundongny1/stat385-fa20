@@ -1,0 +1,232 @@
+---
+title: "STAT 385 Statistics Programming Methods - Fall 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Homework 6
+### Due: Monday November 30, 2020 11:59 pm US Central Time
+#### Created by Christopher Kinson
+
+Grading Rubric (per question):  
+2 points if complete and correct  
+1 point if incomplete or incorrect  
+0 points if no attempt made  
+
+
+**Retrieving your work**
+
+This and all future homework files are written in RMarkdown (.Rmd). The .Rmd file will exist in the `homework` directory within the `course-materials` repo, i.e. `course-materials/homework` in GitHub. You must **pull** the `course-materials` repo first to ensure that you have the most updated version of all course materials and files. After pulling the repo, the homework file will be in the homework directory. You must save the homework file into your individual GitHub repo (the one named as your netID). 
+
+**Submitting your work**
+
+In your individual repo (the one named as your netID), you are to submit ***two*** files:
+
+a. Your reproducible document file (.Rmd) which should be saved as hw#_netID.Rmd. For example, my homework 1 file would be saved as hw1_kinson2.Rmd.
+
+b. Your rendered reproducible document file (.html) which should be saved as hw#_netID.html. For example, my homework 1 file would be saved as hw1_kinson2.html.
+
+You have an unlimited number of submissions, but only the latest proper submission (commit and push) will be viewed and graded. Remember the .Rmd file needs to render properly to .html before submitting. 
+
+
+***
+
+
+*The following problems should be completed by you as an individual. If any problem asks you a particular question, be sure to answer it completely (with code, written sentences, or both). Written sentences should not appear in code chunks or code cells. Written sentences should appear in Markdown syntax unless specifically stated otherwise. When students get stuck on a homework problem, students should ask the question in the Issues page in GitHub. Do not change anything in this file above the double line.*
+
+
+***
+***
+
+
+### Use R for this entire homework assignment. Use the provided URLs to access the datasets (if any). Functions or programming ideas outside of the topics/ideas covered thus far are not allowed. The `subset` function is never allowed in this course.
+
+**#1** (Markdown) Using Markdown syntax, make a numbered list with your first name in normal text as the first item and your last name in bold text as the second item. 
+
+1. Justin
+2. **Kim**
+
+
+**#2** (Prior knowledge, Data visualization, Visual design principles, Markdown) The data visualization in the image below suffers from poor design and interpretability. Using Markdown syntax, create an unordered list that contains two items about the image: one item should describe one flaw with the data visualization, while another item should describe what you would do to improve the data visualization.
+
+![](https://uofi.box.com/shared/static/u9bkhmv01glwu4e6qindsms3w9d8d9iv.jpg)
+
+
+* Separating the rates and the hard numbers would make the data easier to interpret and see. The data visualization suffers from poor visibility. Also, 2019 seems to have 4 quartiles while rest of the dataset only has one per year.
+
+* I would find the average of the 4 quartiles for 2019 and use that data for the 2019 NPL and loan loss reserve.
+
+**#3** (RMarkdown, R Objects, their modes, and attributes, R Lists and data frames, What is data, Importing data, Importing data with the tidyverse) Import the three data sets below using either base R or tidyverse functionality. It would behoove you to coerce the date (and time) columns in these 3 datasets to be appropriate date (and time) columns, i.e. numeric modes.
+
+- [University of Illinois SHIELD Testing Data](https://uofi.box.com/shared/static/omqfplpxi242g75u9idvufyuu5qdw2fu.csv) 
+
+- [Vote By Mail Data](https://uofi.box.com/shared/static/dty5bxsi8pa4dfgly7ap9jtcp1806imy.csv). 
+
+- [Historical Small Business Administration Data with Illinois Businesses](https://uofi.box.com/shared/static/8i0f47hz3fjs4e61fsfj3qix41hvtj92.csv)
+
+```{r}
+library(readr)
+library(lubridate)
+
+
+library(tidyverse)
+vote <- read_csv("https://uofi.box.com/shared/static/dty5bxsi8pa4dfgly7ap9jtcp1806imy.csv", col_types =cols(`Ballot Req Date` = col_date(format = "%m/%d/%Y"), 
+               `Ballot Sent Date` = col_date(format = "%m/%d/%Y"), 
+              `Ballot Received Date` = col_date(format = "%m/%d/%Y")))
+
+shield = read_csv("https://uofi.box.com/shared/static/omqfplpxi242g75u9idvufyuu5qdw2fu.csv")
+mode(shield$date)
+
+sba = read_csv("sba20.csv",
+                col_types = cols(`ApprovalDate` = col_date(format = "%m/%d/%Y"), 
+               `DisbursementDate` = col_date(format = "%m/%d/%Y")))
+
+
+```
+
+
+
+**#4** (RMarkdown, Data wrangling, Data visualization in base R, Visual design principles) Using the imported Historical Small Business Administration Data with Illinois Businesses, base R plotting, and the image below as a guide, re-create the data visualization as closely as possible. *Your percentages will differ from the image below.*
+
+![](https://uofi.box.com/shared/static/9hvudx513r2ka63h5e9p1e4w8ll20yyb.png)
+
+```{r}
+a = c(sum(sba$default_binary[sba$recession_binary == "Active during Recession"]=="Default", na.rm= TRUE)/length(sba$default_binary[sba$recession_binary == "Active during Recession"]))
+      
+b = c(sum(sba$default_binary[sba$recession_binary == "Not Active during Recession"]=="Default", na.rm= TRUE)/length(sba$default_binary[sba$recession_binary == "Not Active during Recession"]))
+
+
+ggplot(data = sba ) + 
+  geom_bar(mapping = aes(x = factor(default_binary), fill = factor(recession_binary)) , position = "stack") +
+  coord_flip()
+
+ggplot(data = sba ) + 
+  geom_bar(mapping = aes(x = factor(recession_binary), fill = factor(default_binary)) , position = "stack", stat="count") +
+  coord_flip()
+```
+
+
+
+
+**#5** (RMarkdown, Data wrangling, Data visualization in tidyverse, Visual design principles) Using the imported Historical Small Business Administration Data with Illinois Businesses, tidyverse plotting, and the image below as a guide, re-create the data visualization as closely as possible. *Your percentages will differ from the image below.*
+
+
+
+![](https://uofi.box.com/shared/static/9hvudx513r2ka63h5e9p1e4w8ll20yyb.png)
+
+
+**#6** (RMarkdown, Data wrangling, Data visualization in base R, Visual design principles) Using the imported Champaign County Vote By Mail Data, base R plotting, and the image below as a guide, re-create the data visualization as closely as possible. *Your percentages will differ from the image below.*
+
+![](https://uofi.box.com/shared/static/iofuld84rt3nl5ddaadqx0yocwy1ajqx.png)
+```{r}
+x <- vote %>%
+  group_by(`Ballot Req Date`) %>%
+  summarise(ballot_req_date_freqs=n()) %>%
+  mutate(cumu_ballot_req_date_freqs=cumsum(ballot_req_date_freqs))
+
+xx <- vote %>%
+  group_by(`Ballot Received Date`) %>%
+  summarise(ballot_rec_date_freqs=n()) %>%
+  mutate(cumu_ballot_rec_date_freqs=cumsum(ballot_rec_date_freqs))
+
+zerodates<-x %>%
+  filter(`Ballot Req Date`<"2020-09-24") %>%
+  mutate(ballot_rec_date_freqs=0, cumu_ballot_rec_date_freqs=0) %>%
+  rename(`Ballot Received Date`=`Ballot Req Date`)
+
+xx2<- rbind(zerodates[c(1,4,5)],xx)
+
+#checking to see which dates are not the same in both datasets
+x$`Ballot Req Date`[121:150]
+xx2$`Ballot Received Date`[121:150]
+
+#Sep 26, 27, Oct 3, 10,11 these dates need to be imputed
+y<-tibble(`Ballot Received Date`=lubridate::mdy(c("09-26-2020","09-27-2020","10-03-2020","10-10-2020","10-11-2020")),ballot_rec_date_freqs=rep(0,5),cumu_ballot_rec_date_freqs=rep(0,5))
+
+xx3 <- rbind(xx2,y)
+xx4<- xx3 %>%
+  arrange(`Ballot Received Date`) %>%
+  mutate(cumu_ballot_rec_date_freqs=cumsum(ballot_rec_date_freqs))
+
+gap1=x$cumu_ballot_req_date_freqs-xx4$cumu_ballot_rec_date_freqs
+
+xx4 <- mutate(xx4, gap1=gap1)
+
+plot(xx4$`Ballot Received Date`,
+     gap1, 
+     type="l", lwd=2, ylab="", xlab="Date", main=title("Vote By Mail 2020\nNumber of Requested Ballots Yet to Be Received in Champaign County", adj=0),
+     frame.plot = FALSE, axes=FALSE, ylim = c(0,30000))
+points(min(xx4$`Ballot Received Date`,na.rm = TRUE),gap1[1], pch=19)
+points(max(xx4$`Ballot Received Date`,na.rm = TRUE),gap1[length(gap1)-1], pch=19)
+points(xx4$`Ballot Received Date`[which(gap1==max(gap1, na.rm = TRUE))],max(gap1, na.rm = TRUE), pch=19)
+text(min(xx4$`Ballot Received Date`,na.rm = TRUE)+2.5,gap1[1]+1000, gap1[1])
+text(xx4$`Ballot Received Date`[which(gap1==max(gap1, na.rm = TRUE))],max(gap1, na.rm = TRUE)+1000,max(gap1, na.rm = TRUE))
+text(max(xx4$`Ballot Received Date`,na.rm = TRUE)-6,gap1[length(gap1)-1],gap1[length(gap1)-1])
+abline(v=max(xx4$`Ballot Received Date`,na.rm = TRUE)+1, col=rgb(232/255,74/255,39/255), lty=2)
+axis(side=1, at=max(xx4$`Ballot Received Date`,na.rm = TRUE)+1, labels="Nov. 2, 2020", tick=FALSE, col.axis=rgb(232/255,74/255,39/255) )
+abline(v=min(xx4$`Ballot Received Date`,na.rm = TRUE), lty=2)
+axis(side=1, at=min(xx4$`Ballot Received Date`,na.rm = TRUE), labels="Apr. 21, 2020", tick=FALSE)
+```
+
+
+**#7** (RMarkdown, Data wrangling, Data visualization in tidyverse, Visual design principles) Using the imported Champaign County Vote By Mail Data, tidyverse plotting, and the image below as a guide, re-create the data visualization as closely as possible. *Your percentages will differ from the image below.*
+
+![](https://uofi.box.com/shared/static/iofuld84rt3nl5ddaadqx0yocwy1ajqx.png)
+
+```{r}
+ggplot(data = xx4, mapping = aes(x=`Ballot Received Date`, y=gap1)) +
+  geom_line(size=1.05) +
+  labs(x= "Date", y="", title = "Vote By Mail 2020\nNumber of Requested Ballots Yet to Be Received in Champaign County") +
+  annotate("text",  x=c(min(xx4$`Ballot Received Date`,na.rm = TRUE)+5,max(xx4$`Ballot Received Date`,na.rm = TRUE)-4),y=c(2000,2000), label =c("Apr. 24, 2020", "Nov. 2, 2020"), colour=c("black",rgb(232/255,74/255,39/255))) +
+  theme(panel.background = element_blank(), axis.ticks=element_blank(), axis.text = element_blank()) +
+  geom_point(aes(x=min(`Ballot Received Date`,na.rm = TRUE),y=gap1[1]), size=2) + 
+  geom_point(aes(x=`Ballot Received Date`[which(gap1==max(gap1, na.rm = TRUE))],y=max(gap1, na.rm = TRUE)), size=2) +
+  geom_point(aes(x=max(`Ballot Received Date`,na.rm = TRUE),y=gap1[length(gap1)-1]), size=2) +
+  geom_text(aes(x=min(`Ballot Received Date`,na.rm = TRUE),y=gap1[1], label=gap1[1]), nudge_x = 2.5,nudge_y = 1000) +
+  geom_text(aes(x=`Ballot Received Date`[which(gap1==max(gap1, na.rm = TRUE))],y=max(gap1, na.rm = TRUE), label=max(gap1, na.rm = TRUE)), nudge_x = 0,nudge_y = 1000) +
+  geom_text(aes(x=max(`Ballot Received Date`,na.rm = TRUE),y=gap1[length(gap1)-1], label=gap1[length(gap1)-1]), nudge_x = -6,nudge_y = 0) +
+  geom_vline(xintercept = min(xx4$`Ballot Received Date`,na.rm = TRUE), linetype="dashed", colour="black") +
+  geom_vline(xintercept = max(xx4$`Ballot Received Date`,na.rm = TRUE)+1, linetype="dashed", colour=rgb(232/255,74/255,39/255)) 
+```
+
+
+
+
+**#8** (RMarkdown, Data wrangling, Data visualization in base R, Visual design principles) Using the imported University of Illinois SHIELD Testing Data, base R plotting, and the image below as a guide, re-create the data visualization as closely as possible. *Your percentages will differ from the image below.*
+
+![](https://uofi.box.com/shared/static/7d0aszmq3ac8p2xdvblmn2pjnd0vvln8.png)
+```{r}
+library(ggplot2)
+ggplot(shield, aes(x=shield$date,y=shield$`New Cases`)) + geom_bar(stat="identity", width=2 , color ="black",fill="blue") +
+  theme_classic() +
+  labs(title = "Unique New Cases", x= "Date", y= "Daily new cases") +
+  theme(plot.title = element_text(hjust = 1)) + geom_line(aes(x = shield$date,y= 100*(shield$`Case Positivity %`)), size = 1.5, color="orange", group = 1)
+
+
+
+qplot(shield$`New Cases`,main="Unique New Cases", xlab = shield$date)
+```
+
+
+**#9** (RMarkdown, Data wrangling, Data visualization in tidyverse, Visual design principles) Using the imported University of Illinois SHIELD Testing Data, tidyverse plotting, and the image below as a guide, re-create the data visualization as closely as possible. *Your percentages will differ from the image below.*
+
+![](https://uofi.box.com/shared/static/7d0aszmq3ac8p2xdvblmn2pjnd0vvln8.png)
+```{r}
+library(ggplot2)
+ggplot(shield, aes(x=shield$date,y=shield$`New Cases`)) + geom_bar(stat="identity", width=2 , color ="black",fill="blue") +
+  theme_dark() +
+  labs(title = "Unique New Cases", x= "Date", y= "Daily new cases") +
+  theme(plot.title = element_text(hjust = 1)) + geom_line(aes(x = shield$date,y= 100*(shield$`Case Positivity %`)), size = 1.5, color="orange", group = 1)
+
+
+
+```
+
+
+**#10** (RMarkdown, Data wrangling, Data visualization in base R and tidyverse, Visual design principles) The image below comes from C. Knaflic's Storytelling with Data `Let's Practice` Book. C. Knaflic believes the NPLs and Loan Loss Reserves data visualization in the bottom panel is an improvement on the original image in the top panel. The University of Illinois SHIELD Testing's data visualization (image provided in **Problem #8**) suffers from the same issues as the NPLs and Loan Loss Reserves data visualization (original image in the top panel). Beginning with the University of Illinois SHIELD Testing Data in **Problem #2**, use C. Knaflic's ideas in the improved image (bottom panel) and either base R or tidyverse plotting to make similar improvements to the University of Illinois SHIELD Testing's data visualization (image provided in **Problem #8**).
+
+![](https://uofi.box.com/shared/static/5m8noxz4pthhc21c7t5v8nq56jquuv1n.jpg)
+
